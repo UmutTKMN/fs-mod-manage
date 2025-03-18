@@ -1,0 +1,46 @@
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 13px;
+  background-color: #fafafa;
+}
+.date-group {
+  background-color: #f3f4f6;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+/* Sabit genişlikli sütunlar için */
+.w-checkbox {
+  width: 30px;
+}
+.w-size {
+  width: 90px;
+}
+.w-time {
+  width: 70px;
+}
+.w-actions {
+  width: 80px;
+}
+/* Daha iyi hover efekti */
+tr:hover {
+  background-color: #f9fafb;
+}
+/* Mobil görünüm optimizasyonları */
+@media (max-width: 640px) {
+  .w-size,
+  .w-time {
+    width: auto;
+  }
+  .mobile-row {
+    display: flex;
+    flex-direction: column;
+  }
+  .mobile-info {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 4px;
+    color: #6b7280;
+    font-size: 11px;
+  }
+}

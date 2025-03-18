@@ -1,0 +1,10 @@
+User-agent: *
+Disallow: /
+Disallow: /logs/
+Disallow: /temp/
+Disallow: /.env.php
+Disallow: /config.php
+Disallow: /functions.php
+
+# Farming Simulator 2025 Mod Yönetim Paneli
+# Bu panel, özel kullanım içindir ve indekslemesi engellenmiştir. 
