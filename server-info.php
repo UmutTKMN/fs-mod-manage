@@ -1,6 +1,7 @@
 <?php
 // Oturum başlat
 session_start();
+session_regenerate_id(true); // Oturum sabitleme koruması
 
 // Yönetici değilse erişimi engelle
 if (!isset($_SESSION['admin']) || $_SESSION['admin'] !== true) {
@@ -195,4 +196,4 @@ function formatBytes($bytes, $precision = 2) {
         </footer>
     </div>
 </body>
-</html> 
+</html>

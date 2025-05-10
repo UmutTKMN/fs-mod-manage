@@ -4,6 +4,7 @@ require_once 'functions.php';
 
 // Oturum başlat
 session_start();
+session_regenerate_id(true); // Oturum sabitleme koruması
 
 // CSRF token oluştur
 $csrfToken = generateCSRFToken();
@@ -516,4 +517,4 @@ closeFtpConnection($ftpConnection);
         });
     </script>
 </body>
-</html> 
+</html>

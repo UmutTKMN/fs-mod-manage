@@ -4,6 +4,7 @@ require_once 'functions.php';
 
 // Oturum başlat
 session_start();
+session_regenerate_id(true); // Oturum sabitleme koruması
 
 // Geçici klasörü oluştur
 createTempDirectory();
@@ -66,14 +67,13 @@ if (isset($_GET['file']) && !empty($_GET['file'])) {
         ];
         
         // MIME türü kısıtlamasını istiyorsanız açın
-        /*
         if (!in_array($fileType, $allowedMimeTypes)) {
             unlink($tempFilePath);
-            $_SESSION['errors'] = ['Bu dosya türü indirmeye izin verilmiyor: ' . $fileType];
+            logActivity('SECURITY', 'İzin verilmeyen dosya türü: ' . $fileType);
+            $_SESSION['errors'] = ['Bu dosya türü indirmeye izin verilmiyor.'];
             header('Location: index.php');
             exit();
         }
-        */
         
         // Dosya indirme başlıkları
         header('Content-Description: File Transfer');
@@ -172,4 +172,4 @@ closeFtpConnection($ftpConnection);
 
 // Hiçbir şey indirilmediyse ana sayfaya yönlendir
 header('Location: index.php');
-exit(); 
+exit();
