@@ -112,12 +112,10 @@ closeFtpConnection($ftpConnection);
     <meta name="robots" content="noindex, nofollow">
     <meta name="author" content="Dostlar Konağı">
     <title>Farming Simulator 2025 Mod Yönetim Paneli</title>
-    
     <!-- Favicon -->
     <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
     <link rel="shortcut icon" href="assets/images/favicon.ico" type="image/x-icon">
     <link rel="apple-touch-icon" href="assets/images/apple-touch-icon.png">
-    
     <!-- CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -178,33 +176,34 @@ closeFtpConnection($ftpConnection);
     </div>
 
     <div class="container mx-auto px-2 py-4 max-w-5xl">
-        <header class="border-b pb-4 mb-4">
-            <div class="flex items-center justify-between mb-3">
-                <div>
-                    <h1 class="text-lg font-medium text-gray-800">Mod Dosya Yönetimi</h1>
-                    <p class="text-xs text-gray-500 mt-1 break-all">
-                        <?php echo htmlspecialchars($currentPath); ?>
-                    </p>
-                </div>
-                <div class="text-xs text-gray-500 flex flex-col items-end">
-                    <a href="mailto:tkmnumut@gmail.com" class="hover:text-gray-700 flex items-center mb-1">
-                        <i class="fas fa-envelope mr-1"></i> Destek: tkmnumut@gmail.com
-                    </a>
-                    <a href="https://discord.gg/QKN5Ycp68N" target="_blank" class="hover:text-gray-700 flex items-center">
-                        <i class="fab fa-discord mr-1"></i> Discord Sunucumuza Katılın
-                    </a>
-                </div>
+        <header class="border-b pb-4 mb-4 flex items-center justify-between">
+  <div class="flex items-center">
+    <h1 class="text-lg font-medium text-gray-800 dark:text-gray-100">Dostlar Konağı</h1>
+  </div>
+  <div class="flex items-center gap-2">
+    <button id="themeToggle" class="px-2 py-1 rounded bg-gray-100 dark:bg-gray-700 text-xs text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-600 transition flex items-center">
+      <i id="themeIcon" class="fas fa-moon mr-1"></i> <span id="themeText">Karanlık</span>
+    </button>
+    <div class="text-xs text-gray-500 flex flex-col items-end">
+      <a href="mailto:tkmnumut@gmail.com" class="hover:text-gray-700 flex items-center mb-1">
+        <i class="fas fa-envelope mr-1"></i> Destek: tkmnumut@gmail.com
+      </a>
+      <a href="https://discord.gg/QKN5Ycp68N" target="_blank" class="hover:text-gray-700 flex items-center">
+        <i class="fab fa-discord mr-1"></i> Discord Sunucumuza Katılın
+      </a>
+    </div>
+  </div>
+</header>
+
+        <!-- Arama Formu -->
+        <form action="" method="GET" class="mt-2">
+            <input type="hidden" name="path" value="<?php echo htmlspecialchars($currentPath); ?>">
+            <div class="relative">
+                <input type="text" name="search" placeholder="Dosya ara..." value="<?php echo htmlspecialchars($searchTerm); ?>" class="w-full p-2 pl-8 border text-xs rounded focus:outline-none focus:ring-1 focus:ring-gray-400">
+                <i class="fas fa-search absolute left-3 top-2 text-gray-400 text-xs"></i>
             </div>
-            
-            <!-- Arama Formu -->
-            <form action="" method="GET" class="mt-2">
-                <input type="hidden" name="path" value="<?php echo htmlspecialchars($currentPath); ?>">
-                <div class="relative">
-                    <input type="text" name="search" placeholder="Dosya ara..." value="<?php echo htmlspecialchars($searchTerm); ?>" class="w-full p-2 pl-8 border text-xs rounded focus:outline-none focus:ring-1 focus:ring-gray-400">
-                    <i class="fas fa-search absolute left-3 top-2 text-gray-400 text-xs"></i>
-                </div>
-            </form>
-        </header>
+        </form>
+    </header>
 
         <!-- Dosya İstatistikleri -->
         <div class="flex justify-between items-center mb-4">
@@ -515,6 +514,34 @@ closeFtpConnection($ftpConnection);
                 localStorage.setItem('hasSeenPopup', currentTime.toString());
             }
         });
+        
+        // Tema değiştirme
+const themeToggle = document.getElementById('themeToggle');
+const themeIcon = document.getElementById('themeIcon');
+const themeText = document.getElementById('themeText');
+function setTheme(dark) {
+  if (dark) {
+    document.documentElement.classList.add('dark');
+    localStorage.setItem('theme', 'dark');
+    themeIcon.classList.remove('fa-moon');
+    themeIcon.classList.add('fa-sun');
+    themeText.textContent = 'Aydınlık';
+  } else {
+    document.documentElement.classList.remove('dark');
+    localStorage.setItem('theme', 'light');
+    themeIcon.classList.remove('fa-sun');
+    themeIcon.classList.add('fa-moon');
+    themeText.textContent = 'Karanlık';
+  }
+}
+if (themeToggle) {
+  themeToggle.addEventListener('click', function() {
+    const isDark = document.documentElement.classList.contains('dark');
+    setTheme(!isDark);
+  });
+  // Sayfa yüklenince ikon ve metni güncelle
+  setTheme(document.documentElement.classList.contains('dark'));
+}
     </script>
 </body>
 </html>
