@@ -128,7 +128,7 @@ closeFtpConnection($ftpConnection);
         <div class="popup-content">
             <div class="popup-header bg-gray-100 border-b border-gray-200">
                 <h3 class="text-base font-medium text-gray-800">
-                    <i class="fas fa-tractor mr-2 text-gray-500"></i>Farming Simulator 2025 Mod Yönetim Paneli
+                    <i class="fas fa-tractor mr-2 text-gray-500"></i>Farming Simulator 2025 Mod Paneli
                 </h3>
                 <span class="popup-close" id="closePopup">&times;</span>
             </div>
@@ -178,7 +178,7 @@ closeFtpConnection($ftpConnection);
     <div class="container mx-auto px-2 py-4 max-w-5xl">
         <header class="border-b pb-4 mb-4 flex items-center justify-between">
   <div class="flex items-center">
-    <h1 class="text-lg font-medium text-gray-400 dark:text-gray-100">Dostlar Konağı</h1>
+    <h1 class="text-lg font-medium text-gray-400 dark:text-gray-100">Dostlar Konağı Mod Paneli</h1>
   </div>
   <div class="flex items-center gap-2">
     <button id="themeToggle" class="px-2 py-1 rounded bg-gray-100 dark:bg-gray-700 text-xs text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-600 transition flex items-center">
@@ -212,27 +212,26 @@ closeFtpConnection($ftpConnection);
                     <i class="fas fa-file text-gray-400 mr-1"></i>
                     <span class="text-gray-700">Dosya: <b><?php echo $totalFiles; ?></b></span>
                 </div>
-                
                 <div class="bg-gray-100 rounded py-1 px-3 flex items-center">
                     <i class="fas fa-folder text-gray-400 mr-1"></i>
                     <span class="text-gray-700">Klasör: <b><?php echo $totalFolders; ?></b></span>
                 </div>
-                
                 <div class="bg-gray-100 rounded py-1 px-3 flex items-center">
                     <i class="fas fa-database text-gray-400 mr-1"></i>
                     <span class="text-gray-700">Toplam Boyut: <b><?php echo formatFileSize($totalSize); ?></b></span>
                 </div>
-                
                 <div class="bg-gray-100 rounded py-1 px-3 flex items-center">
                     <i class="fas fa-calendar-alt text-gray-400 mr-1"></i>
                     <span class="text-gray-700">Tarih Grupları: <b><?php echo count($groupedFiles) - (isset($groupedFiles['Klasörler']) ? 1 : 0); ?></b></span>
                 </div>
             </div>
-            
-            <!-- Toplu İndirme Butonu -->
-            <div class="bg-gray-100 rounded py-1 px-3">
-                <button type="submit" form="fileListForm" id="downloadSelected" class="text-gray-700 text-xs hover:text-gray-900 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center">
+            <!-- Toplu İndirme Butonları Yanyana -->
+            <div class="flex gap-2">
+                <button type="submit" form="fileListForm" id="downloadSelected" class="text-gray-700 text-xs hover:text-gray-900 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded">
                     <i class="fas fa-download mr-1"></i>Seçilenleri İndir
+                </button>
+                <button type="button" id="downloadAll" class="text-gray-700 text-xs hover:text-gray-900 transition flex items-center px-3 py-1 bg-green-600 hover:bg-green-700 text-white rounded">
+                    <i class="fas fa-download mr-1"></i>Tümünü İndir
                 </button>
             </div>
         </div>
@@ -406,20 +405,12 @@ closeFtpConnection($ftpConnection);
                 <?php endforeach; ?>
             </div>
             <?php endif; ?>
-            <div class="flex justify-end mt-4 gap-2">
-                <button type="submit" id="downloadSelected" class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-xs rounded flex items-center disabled:opacity-50 disabled:cursor-not-allowed">
-                    <i class="fas fa-download mr-1"></i> Seçilenleri İndir
-                </button>
-                <button type="button" id="downloadAll" class="px-3 py-1 bg-green-600 hover:bg-green-700 text-white text-xs rounded flex items-center">
-                    <i class="fas fa-download mr-1"></i> Tümünü İndir
-                </button>
-            </div>
         </form>
     </div>
 
     <!-- Footer -->
     <footer class="mb-4 text-center text-xs text-gray-500">
-        <p>&copy; <?php echo date('Y'); ?> Mod Dosya Yönetim Paneli</p>
+        <p>&copy; <?php echo date('Y'); ?> Dostlar Konağı Mod Paneli | Tüm Hakları Saklıdır</p>
     </footer>
 
     <script>
@@ -563,7 +554,6 @@ const downloadAllBtn = document.getElementById('downloadAll');
 if (downloadAllBtn) {
   downloadAllBtn.addEventListener('click', function() {
     const form = document.getElementById('fileListForm');
-    // Tüm dosya checkboxlarını işaretle
     document.querySelectorAll('.fileCheckbox').forEach(cb => cb.checked = true);
     form.submit();
   });
