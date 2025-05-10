@@ -178,7 +178,7 @@ closeFtpConnection($ftpConnection);
     <div class="container mx-auto px-2 py-4 max-w-5xl">
         <header class="border-b pb-4 mb-4 flex items-center justify-between">
   <div class="flex items-center">
-    <h1 class="text-lg font-medium text-gray-800 dark:text-gray-100">Dostlar Konağı</h1>
+    <h1 class="text-lg font-medium text-gray-400 dark:text-gray-100">Dostlar Konağı</h1>
   </div>
   <div class="flex items-center gap-2">
     <button id="themeToggle" class="px-2 py-1 rounded bg-gray-100 dark:bg-gray-700 text-xs text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-600 transition flex items-center">
@@ -206,7 +206,7 @@ closeFtpConnection($ftpConnection);
     </header>
 
         <!-- Dosya İstatistikleri -->
-        <div class="flex justify-between items-center mb-4">
+        <div class="flex justify-between items-center mb-4 mt-2">
             <div class="flex flex-wrap gap-2 text-xs">
                 <div class="bg-gray-100 rounded py-1 px-3 flex items-center">
                     <i class="fas fa-file text-gray-400 mr-1"></i>
@@ -271,20 +271,14 @@ closeFtpConnection($ftpConnection);
         <form id="fileListForm" action="download.php" method="POST">
             <input type="hidden" name="path" value="<?php echo htmlspecialchars($currentPath); ?>">
             <input type="hidden" name="csrf_token" value="<?php echo $csrfToken; ?>">
-            
             <?php if (empty($groupedFiles)): ?>
             <div class="border border-gray-200 rounded p-4 text-center text-xs text-gray-500">
                 Dosya veya klasör bulunamadı.
             </div>
             <?php else: ?>
-            
             <div class="border border-gray-200 rounded overflow-hidden shadow-sm">
-                <div class="p-2 bg-gray-100 flex items-center sticky top-0 z-20">
-                    <input type="checkbox" id="selectAll" class="mr-2 h-3 w-3">
-                    <label for="selectAll" class="text-xs text-gray-600">Tümünü Seç</label>
-                </div>
-                
-                <!-- Tablo Başlıkları -->
+                <!-- Tümünü Seç kaldırıldı -->
+                <!-- Tablo Başlıkları ve dosya satırları burada -->
                 <div class="p-2 bg-gray-50 border-t border-gray-200 hidden sm:flex sticky top-8 z-20">
                     <div class="w-checkbox"></div>
                     <div class="flex-1">Dosya Adı</div>
@@ -300,18 +294,31 @@ closeFtpConnection($ftpConnection);
                         <?php echo $date === 'Klasörler' ? 'Klasörler' : date('d F Y', strtotime($date)); ?>
                         <span class="ml-1 text-xs bg-gray-200 text-gray-600 px-1 rounded"><?php echo count($files); ?></span>
                     </div>
-                    
                     <?php if ($date !== 'Klasörler'): ?>
-                    <div class="text-xs text-gray-500">
-                        <?php
-                            $dateFilesSize = 0;
-                            foreach ($files as $file) {
-                                if (!$file['is_dir']) {
-                                    $dateFilesSize += $file['size'];
+                    <div class="flex items-center gap-2">
+                        <div class="text-xs text-gray-500 mr-2">
+                            <?php
+                                $dateFilesSize = 0;
+                                foreach ($files as $file) {
+                                    if (!$file['is_dir']) {
+                                        $dateFilesSize += $file['size'];
+                                    }
                                 }
-                            }
-                            echo formatFileSize($dateFilesSize);
-                        ?>
+                                echo formatFileSize($dateFilesSize);
+                            ?>
+                        </div>
+                        <form method="post" action="download.php" style="display:inline;">
+                            <input type="hidden" name="path" value="<?php echo htmlspecialchars($currentPath); ?>">
+                            <input type="hidden" name="csrf_token" value="<?php echo $csrfToken; ?>">
+                            <?php foreach ($files as $file): ?>
+                                <?php if (!$file['is_dir']): ?>
+                                    <input type="hidden" name="files[]" value="<?php echo htmlspecialchars($file['name']); ?>">
+                                <?php endif; ?>
+                            <?php endforeach; ?>
+                            <button type="submit" class="px-2 py-1 bg-gray-200 dark:bg-gray-700 text-xs rounded text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-gray-600 hover:bg-gray-300 dark:hover:bg-gray-600 transition flex items-center">
+                                <i class="fas fa-download mr-1"></i> Hepsini İndir
+                            </button>
+                        </form>
                     </div>
                     <?php endif; ?>
                 </div>
@@ -399,6 +406,14 @@ closeFtpConnection($ftpConnection);
                 <?php endforeach; ?>
             </div>
             <?php endif; ?>
+            <div class="flex justify-end mt-4 gap-2">
+                <button type="submit" id="downloadSelected" class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-xs rounded flex items-center disabled:opacity-50 disabled:cursor-not-allowed">
+                    <i class="fas fa-download mr-1"></i> Seçilenleri İndir
+                </button>
+                <button type="button" id="downloadAll" class="px-3 py-1 bg-green-600 hover:bg-green-700 text-white text-xs rounded flex items-center">
+                    <i class="fas fa-download mr-1"></i> Tümünü İndir
+                </button>
+            </div>
         </form>
     </div>
 
@@ -541,6 +556,17 @@ if (themeToggle) {
   });
   // Sayfa yüklenince ikon ve metni güncelle
   setTheme(document.documentElement.classList.contains('dark'));
+}
+
+// Tümünü indir butonu
+const downloadAllBtn = document.getElementById('downloadAll');
+if (downloadAllBtn) {
+  downloadAllBtn.addEventListener('click', function() {
+    const form = document.getElementById('fileListForm');
+    // Tüm dosya checkboxlarını işaretle
+    document.querySelectorAll('.fileCheckbox').forEach(cb => cb.checked = true);
+    form.submit();
+  });
 }
     </script>
 </body>
