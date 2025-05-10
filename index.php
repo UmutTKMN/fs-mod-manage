@@ -178,7 +178,7 @@ closeFtpConnection($ftpConnection);
     <div class="container mx-auto px-2 py-4 max-w-5xl">
         <header class="border-b pb-4 mb-4 flex items-center justify-between">
   <div class="flex items-center">
-    <h1 class="text-lg font-medium text-gray-400 dark:text-gray-100">Dostlar Konağı Mod Paneli</h1>
+    <h1 class="text-lg font-medium text-gray-300 dark:text-gray-100">Dostlar Konağı Mod Paneli</h1>
   </div>
   <div class="flex items-center gap-2">
     <button id="themeToggle" class="px-2 py-1 rounded bg-gray-100 dark:bg-gray-700 text-xs text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-600 transition flex items-center">
@@ -227,12 +227,14 @@ closeFtpConnection($ftpConnection);
             </div>
             <!-- Toplu İndirme Butonları Yanyana -->
             <div class="flex gap-2">
-                <button type="submit" form="fileListForm" id="downloadSelected" class="text-gray-700 text-xs hover:text-gray-900 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded">
+                <button type="submit" form="fileListForm" id="downloadSelected" class="bg-gray-100 rounded py-1 px-3 flex items-center text-xs text-gray-700 hover:bg-gray-200 transition disabled:opacity-50 disabled:cursor-not-allowed" disabled>
                     <i class="fas fa-download mr-1"></i>Seçilenleri İndir
                 </button>
-                <button type="button" id="downloadAll" class="text-gray-700 text-xs hover:text-gray-900 transition flex items-center px-3 py-1 bg-green-600 hover:bg-green-700 text-white rounded">
+                <a href="https://gs-85-14-206-57.server.4netplayers.com:20820/all_mods_download?onlyActive=true" target="_blank">
+                
+                <button type="button" id="downloadAll" class="bg-gray-300 rounded py-1 px-3 flex items-center text-xs text-gray-700 hover:bg-gray-200 transition disabled:opacity-50 disabled:cursor-not-allowed">
                     <i class="fas fa-download mr-1"></i>Tümünü İndir
-                </button>
+                </button></a>
             </div>
         </div>
 
@@ -275,10 +277,10 @@ closeFtpConnection($ftpConnection);
                 Dosya veya klasör bulunamadı.
             </div>
             <?php else: ?>
-            <div class="border border-gray-200 rounded overflow-hidden shadow-sm">
+            <div class="border border-gray-200">
                 <!-- Tümünü Seç kaldırıldı -->
                 <!-- Tablo Başlıkları ve dosya satırları burada -->
-                <div class="p-2 bg-gray-50 border-t border-gray-200 hidden sm:flex sticky top-8 z-20">
+                <div class="p-2 hidden sm:flex sticky top-8 z-20">
                     <div class="w-checkbox"></div>
                     <div class="flex-1">Dosya Adı</div>
                     <div class="w-size text-right">Boyut</div>
