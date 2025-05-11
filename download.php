@@ -2,27 +2,25 @@
 require_once 'config.php';
 require_once 'functions.php';
 
-// Oturum başlat
 session_start();
-session_regenerate_id(true); // Oturum sabitleme koruması
+session_regenerate_id(true);
 
-// Geçici klasörü oluştur
 createTempDirectory();
 
-// Güvenlik zamanlaması - DDoS koruma
 sleep(1);
 
-// FTP bağlantısını kur
 $ftpConnection = connectToFtp();
+if (!$ftpConnection || !($ftpConnection instanceof \FTP\Connection)) {
+    $_SESSION['errors'] = ['FTP bağlantısı kurulamadı. Lütfen daha sonra tekrar deneyin.'];
+    header('Location: index.php');
+    exit();
+}
 
-// Tek dosya indirme
 if (isset($_GET['file']) && !empty($_GET['file'])) {
     $filePath = $_GET['file'];
     
-    // Güvenlik kontrolleri - path traversal ve zararlı karakter önleme
     $filePath = sanitizePath($filePath);
     
-    // Dosya adını temizle
     $fileName = sanitizeFilename(basename($filePath));
     
     if (empty($fileName)) {
@@ -31,18 +29,13 @@ if (isset($_GET['file']) && !empty($_GET['file'])) {
         exit();
     }
     
-    // İşlemi logla
     logActivity('DOWNLOAD', 'Dosya indirme: ' . $filePath);
     
-    // Geçici dosya yolu
     $tempFilePath = TEMP_UPLOAD_DIR . '/' . $fileName;
     
-    // FTP'den dosyayı indir
     if (@ftp_get($ftpConnection, $tempFilePath, $filePath, FTP_BINARY)) {
-        // Dosya bilgilerini al
         $fileSize = filesize($tempFilePath);
         
-        // Dosya boyutu sıfır kontrolü
         if ($fileSize <= 0) {
             unlink($tempFilePath);
             $_SESSION['errors'] = ['Dosya boş veya indirme sırasında bir hata oluştu: ' . $fileName];
@@ -50,12 +43,10 @@ if (isset($_GET['file']) && !empty($_GET['file'])) {
             exit();
         }
         
-        // Dosya MIME türünü belirle
         $fileType = mime_content_type($tempFilePath) ?: 'application/octet-stream';
         
-        // Güvenli MIME türleri - özel kısıtlama istiyorsanız burayı düzenleyin
         $allowedMimeTypes = [
-            'application/octet-stream', 
+            'application/octet-stream',
             'application/zip',
             'text/plain',
             'text/xml',
@@ -66,7 +57,6 @@ if (isset($_GET['file']) && !empty($_GET['file'])) {
             'application/pdf'
         ];
         
-        // MIME türü kısıtlamasını istiyorsanız açın
         if (!in_array($fileType, $allowedMimeTypes)) {
             unlink($tempFilePath);
             logActivity('SECURITY', 'İzin verilmeyen dosya türü: ' . $fileType);
@@ -75,7 +65,6 @@ if (isset($_GET['file']) && !empty($_GET['file'])) {
             exit();
         }
         
-        // Dosya indirme başlıkları
         header('Content-Description: File Transfer');
         header('Content-Type: ' . $fileType);
         header('Content-Disposition: attachment; filename="' . $fileName . '"');
@@ -84,26 +73,20 @@ if (isset($_GET['file']) && !empty($_GET['file'])) {
         header('Pragma: public');
         header('Expires: 0');
         
-        // Çıktı tamponlamasını kapat ve tampon içindeki veriyi temizle
-        ob_end_clean();
-        
-        // Dosyayı oku ve gönder
+        if (ob_get_level()) {
+            ob_end_clean();
+        }
         readfile($tempFilePath);
         
-        // Geçici dosyayı sil
         unlink($tempFilePath);
         
-        // FTP bağlantısını kapat
         closeFtpConnection($ftpConnection);
         exit();
     } else {
         logActivity('ERROR', 'Dosya indirilemedi: ' . $filePath);
         $_SESSION['errors'] = ['Dosya indirilirken bir hata oluştu: ' . $fileName];
     }
-}
-// Çoklu dosya indirme
-elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['files']) && is_array($_POST['files']) && !empty($_POST['files'])) {
-    // CSRF koruma
+} elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['files']) && is_array($_POST['files']) && !empty($_POST['files'])) {
     if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
         logActivity('SECURITY', 'CSRF saldırısı girişimi yapıldı');
         $_SESSION['errors'] = ['Güvenlik doğrulaması başarısız oldu. Lütfen tekrar deneyin.'];
@@ -111,20 +94,15 @@ elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['files']) && is_ar
         exit();
     }
     
-    // Bir dosya seçildiğinde normal indirme yap
     if (count($_POST['files']) == 1) {
         $fileName = sanitizeFilename($_POST['files'][0]);
         $currentPath = isset($_POST['path']) ? sanitizePath($_POST['path']) : '/';
         $currentPath = rtrim($currentPath, '/') . '/';
         $filePath = $currentPath . $fileName;
         
-        // Yönlendir
         header('Location: download.php?file=' . urlencode($filePath));
         exit();
-    } 
-    // Birden fazla dosya seçildiğinde
-    else {
-        // Dosya sayısı sınırı
+    } else {
         if (count($_POST['files']) > 50) {
             $_SESSION['errors'] = ['En fazla 50 dosya seçebilirsiniz.'];
             header('Location: index.php');
@@ -137,7 +115,6 @@ elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['files']) && is_ar
         
         logActivity('DOWNLOAD_BULK', 'Toplu indirme: ' . count($files) . ' dosya');
         
-        // İndirme bağlantılarını sakla
         $downloadUrls = [];
         
         foreach ($files as $fileName) {
@@ -150,26 +127,21 @@ elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['files']) && is_ar
             ];
         }
         
-        // İndirme listesi boşsa ana sayfaya dön
         if (empty($downloadUrls)) {
             $_SESSION['errors'] = ['Geçerli dosya seçilmedi.'];
             header('Location: index.php');
             exit();
         }
         
-        // İndirme listesini session'a sakla
         $_SESSION['download_urls'] = $downloadUrls;
-        $_SESSION['mods_folder'] = true; // mods klasörü bilgisini tut
+        $_SESSION['mods_folder'] = true;
         
-        // İndirme sayfasına yönlendir
         header('Location: download_list.php');
         exit();
     }
 }
 
-// FTP bağlantısını kapat
 closeFtpConnection($ftpConnection);
 
-// Hiçbir şey indirilmediyse ana sayfaya yönlendir
 header('Location: index.php');
 exit();
