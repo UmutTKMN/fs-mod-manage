@@ -52,13 +52,13 @@ foreach ($fileList as $file) {
 
 // Filtre uygula
 if (!empty($searchTerm)) {
-    $fileList = array_filter($fileList, function($file) use ($searchTerm) {
+    $fileList = array_filter($fileList, function ($file) use ($searchTerm) {
         return stripos($file['name'], $searchTerm) !== false;
     });
 }
 
 // Dosyaları sırala
-usort($fileList, function($a, $b) use ($sortBy, $sortOrder) {
+usort($fileList, function ($a, $b) use ($sortBy, $sortOrder) {
     if ($sortOrder == 'asc') {
         return $a[$sortBy] <=> $b[$sortBy];
     } else {
@@ -75,11 +75,11 @@ foreach ($fileList as $file) {
     } else {
         $key = date('Y-m-d', $file['date']);
     }
-    
+
     if (!isset($groupedFiles[$key])) {
         $groupedFiles[$key] = [];
     }
-    
+
     $groupedFiles[$key][] = $file;
 }
 
@@ -105,6 +105,7 @@ closeFtpConnection($ftpConnection);
 
 <!DOCTYPE html>
 <html lang="tr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -122,6 +123,7 @@ closeFtpConnection($ftpConnection);
     <link rel="stylesheet" href="assets/style.css">
     <link rel="stylesheet" href="assets/popup.css">
 </head>
+
 <body class="bg-white min-h-screen">
     <!-- Popup Penceresi -->
     <div class="popup-overlay" id="welcomePopup">
@@ -139,7 +141,7 @@ closeFtpConnection($ftpConnection);
                 <p class="text-sm text-gray-600 mb-4">
                     Bu panel, Farming Simulator 2025 sunucumuza giriş yapabilmeniz için gerekli olan tüm modları indirmenizi sağlar.
                 </p>
-                
+
                 <div class="text-xs text-gray-600 space-y-3 mb-4">
                     <div class="feature-item">
                         <i class="fas fa-check-circle feature-icon text-gray-500"></i>
@@ -162,7 +164,7 @@ closeFtpConnection($ftpConnection);
                         <div>Discord sunucumuza katılarak diğer çiftçilerle sohbet edebilir ve yardım alabilirsiniz: <a href="https://discord.gg/QKN5Ycp68N" target="_blank" class="text-gray-700 hover:underline">discord.gg/QKN5Ycp68N</a></div>
                     </div>
                 </div>
-                
+
                 <div class="text-sm text-gray-700 font-medium">
                     İyi oyunlar dileriz!
                 </div>
@@ -177,23 +179,23 @@ closeFtpConnection($ftpConnection);
 
     <div class="container mx-auto px-2 py-4 max-w-5xl">
         <header class="border-b pb-4 mb-4 flex items-center justify-between">
-  <div class="flex items-center">
-    <h1 class="text-lg font-medium text-gray-300 dark:text-gray-100">Dostlar Konağı Mod Paneli</h1>
-  </div>
-  <div class="flex items-center gap-2">
-    <button id="themeToggle" class="px-2 py-1 rounded bg-gray-100 dark:bg-gray-700 text-xs text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-600 transition flex items-center">
-      <i id="themeIcon" class="fas fa-moon mr-1"></i> <span id="themeText">Karanlık</span>
-    </button>
-    <div class="text-xs text-gray-500 flex flex-col items-end">
-      <a href="mailto:tkmnumut@gmail.com" class="hover:text-gray-700 flex items-center mb-1">
-        <i class="fas fa-envelope mr-1"></i> Destek: tkmnumut@gmail.com
-      </a>
-      <a href="https://discord.gg/QKN5Ycp68N" target="_blank" class="hover:text-gray-700 flex items-center">
-        <i class="fab fa-discord mr-1"></i> Discord Sunucumuza Katılın
-      </a>
-    </div>
-  </div>
-</header>
+            <div class="flex items-center">
+                <h1 class="text-lg font-medium dark:text-gray-100">Dostlar Konağı Mod Paneli</h1>
+            </div>
+            <div class="flex items-center gap-2">
+                <button id="themeToggle" class="px-2 py-1 rounded bg-gray-100 dark:bg-gray-700 text-xs text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-600 transition flex items-center">
+                    <i id="themeIcon" class="fas fa-moon mr-1"></i> <span id="themeText">Karanlık</span>
+                </button>
+                <div class="text-xs text-gray-500 flex flex-col items-end">
+                    <a href="mailto:tkmnumut@gmail.com" class="hover:text-gray-700 flex items-center mb-1">
+                        <i class="fas fa-envelope mr-1"></i> Destek: tkmnumut@gmail.com
+                    </a>
+                    <a href="https://discord.gg/QKN5Ycp68N" target="_blank" class="hover:text-gray-700 flex items-center">
+                        <i class="fab fa-discord mr-1"></i> Discord Sunucumuza Katılın
+                    </a>
+                </div>
+            </div>
+        </header>
 
         <!-- Arama Formu -->
         <form action="" method="GET" class="mt-2">
@@ -203,7 +205,7 @@ closeFtpConnection($ftpConnection);
                 <i class="fas fa-search absolute left-3 top-2 text-gray-400 text-xs"></i>
             </div>
         </form>
-    </header>
+        </header>
 
         <!-- Dosya İstatistikleri -->
         <div class="flex justify-between items-center mb-4 mt-2">
@@ -220,52 +222,45 @@ closeFtpConnection($ftpConnection);
                     <i class="fas fa-database text-gray-400 mr-1"></i>
                     <span class="text-gray-700">Toplam Boyut: <b><?php echo formatFileSize($totalSize); ?></b></span>
                 </div>
-                <div class="bg-gray-100 rounded py-1 px-3 flex items-center">
-                    <i class="fas fa-calendar-alt text-gray-400 mr-1"></i>
-                    <span class="text-gray-700">Tarih Grupları: <b><?php echo count($groupedFiles) - (isset($groupedFiles['Klasörler']) ? 1 : 0); ?></b></span>
-                </div>
             </div>
             <!-- Toplu İndirme Butonları Yanyana -->
             <div class="flex gap-2">
-                <button type="submit" form="fileListForm" id="downloadSelected" class="bg-gray-100 rounded py-1 px-3 flex items-center text-xs text-gray-700 hover:bg-gray-200 transition disabled:opacity-50 disabled:cursor-not-allowed" disabled>
-                    <i class="fas fa-download mr-1"></i>Seçilenleri İndir
-                </button>
                 <a href="https://gs-85-14-206-57.server.4netplayers.com:20820/all_mods_download?onlyActive=true" target="_blank">
-                
-                <button type="button" id="downloadAll" class="bg-gray-300 rounded py-1 px-3 flex items-center text-xs text-gray-700 hover:bg-gray-200 transition disabled:opacity-50 disabled:cursor-not-allowed">
-                    <i class="fas fa-download mr-1"></i>Tümünü İndir
-                </button></a>
+
+                    <button type="button" class="bg-gray-100 rounded py-1 px-3 flex items-center text-xs text-gray-700 hover:bg-gray-200 transition disabled:opacity-50 disabled:cursor-not-allowed">
+                        <i class="fas fa-download mr-1"></i>Tümünü İndir
+                    </button></a>
             </div>
         </div>
 
         <!-- Bildirimler -->
         <?php if (!empty($errors)): ?>
-        <div class="bg-gray-50 border-l-2 border-red-400 text-red-600 p-2 mb-3 text-xs">
-            <ul class="list-disc list-inside">
-                <?php foreach ($errors as $error): ?>
-                <li><?php echo htmlspecialchars($error); ?></li>
-                <?php endforeach; ?>
-            </ul>
-        </div>
+            <div class="bg-gray-50 border-l-2 border-red-400 text-red-600 p-2 mb-3 text-xs">
+                <ul class="list-disc list-inside">
+                    <?php foreach ($errors as $error): ?>
+                        <li><?php echo htmlspecialchars($error); ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
         <?php endif; ?>
 
         <?php if (!empty($success)): ?>
-        <div class="bg-gray-50 border-l-2 border-green-400 text-green-600 p-2 mb-3 text-xs">
-            <ul class="list-disc list-inside">
-                <?php foreach ($success as $message): ?>
-                <li><?php echo htmlspecialchars($message); ?></li>
-                <?php endforeach; ?>
-            </ul>
-        </div>
+            <div class="bg-gray-50 border-l-2 border-green-400 text-green-600 p-2 mb-3 text-xs">
+                <ul class="list-disc list-inside">
+                    <?php foreach ($success as $message): ?>
+                        <li><?php echo htmlspecialchars($message); ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
         <?php endif; ?>
 
         <!-- Üst dizin bağlantısı -->
         <?php if ($currentPath != '/' && $currentPath != FTP_DEFAULT_PATH): ?>
-        <div class="mb-3">
-            <a href="?path=<?php echo urlencode(dirname($currentPath)); ?>" class="inline-flex items-center px-2 py-1 bg-gray-100 rounded text-xs text-gray-600 hover:bg-gray-200">
-                <i class="fas fa-level-up-alt mr-1"></i>Üst Dizin
-            </a>
-        </div>
+            <div class="mb-3">
+                <a href="?path=<?php echo urlencode(dirname($currentPath)); ?>" class="inline-flex items-center px-2 py-1 bg-gray-100 rounded text-xs text-gray-600 hover:bg-gray-200">
+                    <i class="fas fa-level-up-alt mr-1"></i>Üst Dizin
+                </a>
+            </div>
         <?php endif; ?>
 
         <!-- Dosya Listesi -->
@@ -273,139 +268,139 @@ closeFtpConnection($ftpConnection);
             <input type="hidden" name="path" value="<?php echo htmlspecialchars($currentPath); ?>">
             <input type="hidden" name="csrf_token" value="<?php echo $csrfToken; ?>">
             <?php if (empty($groupedFiles)): ?>
-            <div class="border border-gray-200 rounded p-4 text-center text-xs text-gray-500">
-                Dosya veya klasör bulunamadı.
-            </div>
+                <div class="border border-gray-200 rounded p-4 text-center text-xs text-gray-500">
+                    Dosya veya klasör bulunamadı.
+                </div>
             <?php else: ?>
-            <div class="border border-gray-200">
-                <!-- Tümünü Seç kaldırıldı -->
-                <!-- Tablo Başlıkları ve dosya satırları burada -->
-                <div class="p-2 hidden sm:flex sticky top-8 z-20">
-                    <div class="w-checkbox"></div>
-                    <div class="flex-1">Dosya Adı</div>
-                    <div class="w-size text-right">Boyut</div>
-                    <div class="w-time text-center">Saat</div>
-                    <div class="w-actions text-right">İşlem</div>
-                </div>
-                
-                <?php foreach ($groupedFiles as $date => $files): ?>
-                <div class="date-group p-2 text-xs font-medium text-gray-600 border-t border-gray-200 flex items-center justify-between">
-                    <div class="flex items-center">
-                        <i class="fas fa-calendar-day mr-1 text-gray-400"></i>
-                        <?php echo $date === 'Klasörler' ? 'Klasörler' : date('d F Y', strtotime($date)); ?>
-                        <span class="ml-1 text-xs bg-gray-200 text-gray-600 px-1 rounded"><?php echo count($files); ?></span>
+                <div class="border border-gray-200">
+                    <!-- Tümünü Seç kaldırıldı -->
+                    <!-- Tablo Başlıkları ve dosya satırları burada -->
+                    <div class="p-2 hidden sm:flex sticky top-8 z-20">
+                        <div class="w-checkbox"></div>
+                        <div class="flex-1">Dosya Adı</div>
+                        <div class="w-size text-right">Boyut</div>
+                        <div class="w-time text-center">Saat</div>
+                        <div class="w-actions text-right">İşlem</div>
                     </div>
-                    <?php if ($date !== 'Klasörler'): ?>
-                    <div class="flex items-center gap-2">
-                        <div class="text-xs text-gray-500 mr-2">
-                            <?php
-                                $dateFilesSize = 0;
-                                foreach ($files as $file) {
-                                    if (!$file['is_dir']) {
-                                        $dateFilesSize += $file['size'];
-                                    }
-                                }
-                                echo formatFileSize($dateFilesSize);
-                            ?>
+
+                    <?php foreach ($groupedFiles as $date => $files): ?>
+                        <div class="date-group p-2 text-xs font-medium text-gray-600 border-t border-gray-200 flex items-center justify-between">
+                            <div class="flex items-center">
+                                <i class="fas fa-calendar-day mr-1 text-gray-400"></i>
+                                <?php echo $date === 'Klasörler' ? 'Klasörler' : date('d F Y', strtotime($date)); ?>
+                                <span class="ml-1 text-xs bg-gray-200 text-gray-600 px-1 rounded"><?php echo count($files); ?></span>
+                            </div>
+                            <?php if ($date !== 'Klasörler'): ?>
+                                <div class="flex items-center gap-2">
+                                    <div class="text-xs text-gray-500 mr-2">
+                                        <?php
+                                        $dateFilesSize = 0;
+                                        foreach ($files as $file) {
+                                            if (!$file['is_dir']) {
+                                                $dateFilesSize += $file['size'];
+                                            }
+                                        }
+                                        echo formatFileSize($dateFilesSize);
+                                        ?>
+                                    </div>
+                                    <form method="post" action="download.php" style="display:inline;">
+                                        <input type="hidden" name="path" value="<?php echo htmlspecialchars($currentPath); ?>">
+                                        <input type="hidden" name="csrf_token" value="<?php echo $csrfToken; ?>">
+                                        <?php foreach ($files as $file): ?>
+                                            <?php if (!$file['is_dir']): ?>
+                                                <input type="hidden" name="files[]" value="<?php echo htmlspecialchars($file['name']); ?>">
+                                            <?php endif; ?>
+                                        <?php endforeach; ?>
+                                        <button type="submit" class="bg-gray-100 rounded py-1 px-3 flex items-center text-xs text-gray-700 hover:bg-gray-200 transition disabled:opacity-50 disabled:cursor-not-allowed">
+                                            <i class="fas fa-download mr-1"></i> Hepsini İndir
+                                        </button>
+                                    </form>
+                                </div>
+                            <?php endif; ?>
                         </div>
-                        <form method="post" action="download.php" style="display:inline;">
-                            <input type="hidden" name="path" value="<?php echo htmlspecialchars($currentPath); ?>">
-                            <input type="hidden" name="csrf_token" value="<?php echo $csrfToken; ?>">
-                            <?php foreach ($files as $file): ?>
-                                <?php if (!$file['is_dir']): ?>
-                                    <input type="hidden" name="files[]" value="<?php echo htmlspecialchars($file['name']); ?>">
-                                <?php endif; ?>
-                            <?php endforeach; ?>
-                            <button type="submit" class="px-2 py-1 bg-gray-200 dark:bg-gray-700 text-xs rounded text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-gray-600 hover:bg-gray-300 dark:hover:bg-gray-600 transition flex items-center">
-                                <i class="fas fa-download mr-1"></i> Hepsini İndir
-                            </button>
-                        </form>
-                    </div>
-                    <?php endif; ?>
+
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-xs table-fixed">
+                                <tbody>
+                                    <?php foreach ($files as $file): ?>
+                                        <tr class="border-t border-gray-200 hover:bg-gray-100 transition-colors">
+                                            <td class="p-2 w-checkbox align-top">
+                                                <?php if (!$file['is_dir']): ?>
+                                                    <input type="checkbox" name="files[]" value="<?php echo htmlspecialchars($file['name']); ?>" class="fileCheckbox h-3 w-3">
+                                                <?php endif; ?>
+                                            </td>
+
+                                            <!-- Mobil için tek sütunda gösterim -->
+                                            <td class="p-2 sm:hidden mobile-row">
+                                                <?php if ($file['is_dir']): ?>
+                                                    <a href="?path=<?php echo urlencode($currentPath . '/' . $file['name']); ?>" class="flex items-center text-gray-700 hover:text-gray-900">
+                                                        <i class="fas fa-folder text-gray-400 mr-2 text-xs"></i>
+                                                        <span class="truncate"><?php echo htmlspecialchars($file['name']); ?></span>
+                                                    </a>
+                                                <?php else: ?>
+                                                    <div class="flex items-center">
+                                                        <i class="fas fa-file text-gray-400 mr-2 text-xs"></i>
+                                                        <span class="truncate"><?php echo htmlspecialchars($file['name']); ?></span>
+                                                    </div>
+                                                <?php endif; ?>
+
+                                                <div class="mobile-info">
+                                                    <span>
+                                                        <?php if (!$file['is_dir']): ?>
+                                                            <?php echo formatFileSize($file['size']); ?>
+                                                        <?php else: ?>
+                                                            Klasör
+                                                        <?php endif; ?>
+                                                    </span>
+                                                    <span><?php echo date('H:i', $file['date']); ?></span>
+                                                    <span>
+                                                        <?php if (!$file['is_dir']): ?>
+                                                            <a href="download.php?file=<?php echo urlencode($currentPath . '/' . $file['name']); ?>" class="text-gray-500 hover:text-gray-700 mr-1">
+                                                                <i class="fas fa-download"></i>
+                                                            </a>
+                                                        <?php endif; ?>
+                                                    </span>
+                                                </div>
+                                            </td>
+
+                                            <!-- Masaüstü için standart görünüm -->
+                                            <td class="p-2 hidden sm:table-cell">
+                                                <?php if ($file['is_dir']): ?>
+                                                    <a href="?path=<?php echo urlencode($currentPath . '/' . $file['name']); ?>" class="flex items-center text-gray-700 hover:text-gray-900">
+                                                        <i class="fas fa-folder text-gray-400 mr-2 text-xs"></i>
+                                                        <span class="truncate"><?php echo htmlspecialchars($file['name']); ?></span>
+                                                    </a>
+                                                <?php else: ?>
+                                                    <div class="flex items-center">
+                                                        <i class="fas fa-file text-gray-400 mr-2 text-xs"></i>
+                                                        <span class="truncate"><?php echo htmlspecialchars($file['name']); ?></span>
+                                                    </div>
+                                                <?php endif; ?>
+                                            </td>
+                                            <td class="p-2 w-size text-right hidden sm:table-cell">
+                                                <?php if (!$file['is_dir']): ?>
+                                                    <?php echo formatFileSize($file['size']); ?>
+                                                <?php else: ?>
+                                                    -
+                                                <?php endif; ?>
+                                            </td>
+                                            <td class="p-2 w-time text-center hidden sm:table-cell">
+                                                <?php echo date('H:i', $file['date']); ?>
+                                            </td>
+                                            <td class="p-2 w-actions text-right hidden sm:table-cell">
+                                                <?php if (!$file['is_dir']): ?>
+                                                    <a href="download.php?file=<?php echo urlencode($currentPath . '/' . $file['name']); ?>" class="text-gray-500 hover:text-gray-700">
+                                                        <i class="fas fa-download"></i>
+                                                    </a>
+                                                <?php endif; ?>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    <?php endforeach; ?>
                 </div>
-                
-                <div class="overflow-x-auto">
-                    <table class="w-full text-xs table-fixed">
-                        <tbody>
-                            <?php foreach ($files as $file): ?>
-                            <tr class="border-t border-gray-200 hover:bg-gray-50 transition-colors">
-                                <td class="p-2 w-checkbox align-top">
-                                    <?php if (!$file['is_dir']): ?>
-                                    <input type="checkbox" name="files[]" value="<?php echo htmlspecialchars($file['name']); ?>" class="fileCheckbox h-3 w-3">
-                                    <?php endif; ?>
-                                </td>
-                                
-                                <!-- Mobil için tek sütunda gösterim -->
-                                <td class="p-2 sm:hidden mobile-row">
-                                    <?php if ($file['is_dir']): ?>
-                                    <a href="?path=<?php echo urlencode($currentPath . '/' . $file['name']); ?>" class="flex items-center text-gray-700 hover:text-gray-900">
-                                        <i class="fas fa-folder text-gray-400 mr-2 text-xs"></i>
-                                        <span class="truncate"><?php echo htmlspecialchars($file['name']); ?></span>
-                                    </a>
-                                    <?php else: ?>
-                                    <div class="flex items-center">
-                                        <i class="fas fa-file text-gray-400 mr-2 text-xs"></i>
-                                        <span class="truncate"><?php echo htmlspecialchars($file['name']); ?></span>
-                                    </div>
-                                    <?php endif; ?>
-                                    
-                                    <div class="mobile-info">
-                                        <span>
-                                            <?php if (!$file['is_dir']): ?>
-                                            <?php echo formatFileSize($file['size']); ?>
-                                            <?php else: ?>
-                                            Klasör
-                                            <?php endif; ?>
-                                        </span>
-                                        <span><?php echo date('H:i', $file['date']); ?></span>
-                                        <span>
-                                            <?php if (!$file['is_dir']): ?>
-                                            <a href="download.php?file=<?php echo urlencode($currentPath . '/' . $file['name']); ?>" class="text-gray-500 hover:text-gray-700 mr-1">
-                                                <i class="fas fa-download"></i>
-                                            </a>
-                                            <?php endif; ?>
-                                        </span>
-                                    </div>
-                                </td>
-                                
-                                <!-- Masaüstü için standart görünüm -->
-                                <td class="p-2 hidden sm:table-cell">
-                                    <?php if ($file['is_dir']): ?>
-                                    <a href="?path=<?php echo urlencode($currentPath . '/' . $file['name']); ?>" class="flex items-center text-gray-700 hover:text-gray-900">
-                                        <i class="fas fa-folder text-gray-400 mr-2 text-xs"></i>
-                                        <span class="truncate"><?php echo htmlspecialchars($file['name']); ?></span>
-                                    </a>
-                                    <?php else: ?>
-                                    <div class="flex items-center">
-                                        <i class="fas fa-file text-gray-400 mr-2 text-xs"></i>
-                                        <span class="truncate"><?php echo htmlspecialchars($file['name']); ?></span>
-                                    </div>
-                                    <?php endif; ?>
-                                </td>
-                                <td class="p-2 w-size text-right hidden sm:table-cell">
-                                    <?php if (!$file['is_dir']): ?>
-                                    <?php echo formatFileSize($file['size']); ?>
-                                    <?php else: ?>
-                                    -
-                                    <?php endif; ?>
-                                </td>
-                                <td class="p-2 w-time text-center hidden sm:table-cell">
-                                    <?php echo date('H:i', $file['date']); ?>
-                                </td>
-                                <td class="p-2 w-actions text-right hidden sm:table-cell">
-                                    <?php if (!$file['is_dir']): ?>
-                                    <a href="download.php?file=<?php echo urlencode($currentPath . '/' . $file['name']); ?>" class="text-gray-500 hover:text-gray-700">
-                                        <i class="fas fa-download"></i>
-                                    </a>
-                                    <?php endif; ?>
-                                </td>
-                            </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                </div>
-                <?php endforeach; ?>
-            </div>
             <?php endif; ?>
         </form>
     </div>
@@ -421,47 +416,47 @@ closeFtpConnection($ftpConnection);
             const selectAll = document.getElementById('selectAll');
             const fileCheckboxes = document.querySelectorAll('.fileCheckbox');
             const downloadButton = document.getElementById('downloadSelected');
-            
+
             if (selectAll && fileCheckboxes.length > 0) {
                 // Tümünü seç/kaldır fonksiyonu
                 selectAll.addEventListener('change', function() {
                     const isChecked = this.checked;
-                    
+
                     fileCheckboxes.forEach(function(checkbox) {
                         checkbox.checked = isChecked;
                     });
-                    
+
                     // İndirme butonu durumunu güncelle
                     updateDownloadButtonState();
                 });
-                
+
                 // Her dosya seçildiğinde indirme butonunu güncelle
                 fileCheckboxes.forEach(function(checkbox) {
                     checkbox.addEventListener('change', function() {
                         updateDownloadButtonState();
-                        
+
                         // Tümünü seç durumunu güncelle
                         const allChecked = Array.from(fileCheckboxes).every(function(cb) {
                             return cb.checked;
                         });
-                        
+
                         const someChecked = Array.from(fileCheckboxes).some(function(cb) {
                             return cb.checked;
                         });
-                        
+
                         selectAll.checked = allChecked;
                         selectAll.indeterminate = !allChecked && someChecked;
                     });
                 });
-                
+
                 // İndirme butonu durumunu güncelle
                 function updateDownloadButtonState() {
                     const hasChecked = Array.from(fileCheckboxes).some(function(checkbox) {
                         return checkbox.checked;
                     });
-                    
+
                     downloadButton.disabled = !hasChecked;
-                    
+
                     if (hasChecked) {
                         downloadButton.classList.add('text-gray-900');
                         downloadButton.classList.remove('text-gray-400');
@@ -470,49 +465,49 @@ closeFtpConnection($ftpConnection);
                         downloadButton.classList.add('text-gray-400');
                     }
                 }
-                
+
                 // Sayfa yüklendiğinde buton durumunu ayarla
                 updateDownloadButtonState();
             }
-            
+
             // Popup işlemleri
             const popup = document.getElementById('welcomePopup');
             const closePopupBtn = document.getElementById('closePopupBtn');
             const closePopupX = document.getElementById('closePopup');
-            
+
             // Popup'ı göster
             setTimeout(function() {
                 popup.classList.add('active');
             }, 500);
-            
+
             // Kapatma butonları için olay dinleyicileri
             if (closePopupBtn) {
                 closePopupBtn.addEventListener('click', function() {
                     popup.classList.remove('active');
                 });
             }
-            
+
             if (closePopupX) {
                 closePopupX.addEventListener('click', function() {
                     popup.classList.remove('active');
                 });
             }
-            
+
             // Popup dışına tıklama ile kapatma
             popup.addEventListener('click', function(e) {
                 if (e.target === popup) {
                     popup.classList.remove('active');
                 }
             });
-            
+
             // Popupı yerel depolamada saklama (24 saat boyunca tekrar gösterme)
             const hasSeenPopup = localStorage.getItem('hasSeenPopup');
             const currentTime = new Date().getTime();
-            
+
             if (hasSeenPopup) {
                 const lastPopupTime = parseInt(hasSeenPopup);
                 const hoursPassed = (currentTime - lastPopupTime) / (1000 * 60 * 60);
-                
+
                 if (hoursPassed < 24) {
                     popup.classList.remove('active');
                 } else {
@@ -522,44 +517,46 @@ closeFtpConnection($ftpConnection);
                 localStorage.setItem('hasSeenPopup', currentTime.toString());
             }
         });
-        
-        // Tema değiştirme
-const themeToggle = document.getElementById('themeToggle');
-const themeIcon = document.getElementById('themeIcon');
-const themeText = document.getElementById('themeText');
-function setTheme(dark) {
-  if (dark) {
-    document.documentElement.classList.add('dark');
-    localStorage.setItem('theme', 'dark');
-    themeIcon.classList.remove('fa-moon');
-    themeIcon.classList.add('fa-sun');
-    themeText.textContent = 'Aydınlık';
-  } else {
-    document.documentElement.classList.remove('dark');
-    localStorage.setItem('theme', 'light');
-    themeIcon.classList.remove('fa-sun');
-    themeIcon.classList.add('fa-moon');
-    themeText.textContent = 'Karanlık';
-  }
-}
-if (themeToggle) {
-  themeToggle.addEventListener('click', function() {
-    const isDark = document.documentElement.classList.contains('dark');
-    setTheme(!isDark);
-  });
-  // Sayfa yüklenince ikon ve metni güncelle
-  setTheme(document.documentElement.classList.contains('dark'));
-}
 
-// Tümünü indir butonu
-const downloadAllBtn = document.getElementById('downloadAll');
-if (downloadAllBtn) {
-  downloadAllBtn.addEventListener('click', function() {
-    const form = document.getElementById('fileListForm');
-    document.querySelectorAll('.fileCheckbox').forEach(cb => cb.checked = true);
-    form.submit();
-  });
-}
+        // Tema değiştirme
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const themeText = document.getElementById('themeText');
+
+        function setTheme(dark) {
+            if (dark) {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+                themeText.textContent = 'Aydınlık';
+            } else {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+                themeText.textContent = 'Karanlık';
+            }
+        }
+        if (themeToggle) {
+            themeToggle.addEventListener('click', function() {
+                const isDark = document.documentElement.classList.contains('dark');
+                setTheme(!isDark);
+            });
+            // Sayfa yüklenince ikon ve metni güncelle
+            setTheme(document.documentElement.classList.contains('dark'));
+        }
+
+        // Tümünü indir butonu
+        const downloadAllBtn = document.getElementById('downloadAll');
+        if (downloadAllBtn) {
+            downloadAllBtn.addEventListener('click', function() {
+                const form = document.getElementById('fileListForm');
+                document.querySelectorAll('.fileCheckbox').forEach(cb => cb.checked = true);
+                form.submit();
+            });
+        }
     </script>
 </body>
+
 </html>
